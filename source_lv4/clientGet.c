@@ -73,7 +73,69 @@ void clientPrint(int fd)
 void userTask(char hostname[], int port, char webaddr[])
 {
   int clientfd;
+  int flag = 1;
+  char userRequest[MAXLINE];
+  char command[MAXLINE];
+  char argument1[MAXLINE];
+  char argument2[MAXLINE];
 
+  while (flag) {
+    printf("#");
+    fgets(userRequest, MAXLINE, stdin);
+    int userRequestLength = strlen(userRequest);
+    if ((userRequestLength > 0) && (userRequest[userRequestLength-1] == '\n'))
+      userRequest[userRequestLength-1] = '\0';
+
+    if (!strstr(userRequest, " ")) { // one word
+      if (!strcmp(userRequest, "LIST")) {
+        sprintf(webaddr, "/dataGet.cgi?command=LIST");
+        clientfd = Open_clientfd(hostname, port);
+        clientSend(clientfd, webaddr);
+        clientPrint(clientfd);
+        Close(clientfd);
+      } else if (!strcmp(userRequest, "QUIT") || !strcmp(userRequest, "EXIT")) {
+        flag = 0;
+      } else {
+        printf("Undefined error.\n");
+      }
+    } else { // 2 or more words
+      char *temp = strtok(userRequest, " ");
+      strcpy(command, temp);
+      temp = strtok(NULL, " ");
+      strcpy(argument1, temp);
+      if (temp = strtok(NULL, " ")) { // 3 or more words
+        strcpy(argument2, temp);
+        if (temp = strtok(NULL, " ")) { // more than 3 words
+          printf("Too many arguments.\n");
+        } else {
+          if (!strcmp(command, "GET")) {
+          sprintf(webaddr, "/dataGet.cgi?NAME=%s&N=%s", argument1, argument2);
+          clientfd = Open_clientfd(hostname, port);
+          clientSend(clientfd, webaddr);
+          clientPrint(clientfd);
+          Close(clientfd);
+          }
+        }
+      } else { // 2 words
+        if (!strcmp(command, "INFO")) {
+          sprintf(webaddr, "/dataGet.cgi?command=INFO&value=%s", argument1);
+          clientfd = Open_clientfd(hostname, port);
+          clientSend(clientfd, webaddr);
+          clientPrint(clientfd);
+          Close(clientfd);
+        } else if (!strcmp(command, "GET")) {
+          sprintf(webaddr, "/dataGet.cgi?NAME=%s&N=1", argument1);
+          clientfd = Open_clientfd(hostname, port);
+          clientSend(clientfd, webaddr);
+          clientPrint(clientfd);
+          Close(clientfd);
+        } else {
+          printf("Undefined error.\n");
+        }
+      }
+    }
+
+  }
   clientfd = Open_clientfd(hostname, port);
   clientSend(clientfd, webaddr);
   clientPrint(clientfd);

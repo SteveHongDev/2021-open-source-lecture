@@ -52,6 +52,37 @@ void textReturn(void)
   char *buf;
   char *ptr;
 
+  char *token;
+  MYSQL *conn; // mysql과의 connection 매개체
+  MYSQL_RES *res; // query에 대한 result값을 저장하는 위치변수
+  MYSQL_ROW row; // row마다 탐색하기 위해 필요한 변수
+
+  char *server = "localhost";
+  char *user = "team9";
+  char *password = "1234";
+  char *database = "opensource";
+
+  char name[MAXLINE];
+  int time;
+  float value;
+  int flag = 0;
+
+  int id;
+  int count;
+  float average;
+  char temp[MAXLINE];
+
+  conn = mysql_init(NULL);
+
+  /* connect to database... */
+  if (!mysql_real_connect(conn, server, user, password, NULL, 0, NULL, 0)) {
+    fprintf(stderr, "%s\n", mysql_error(conn));
+    exit(1);
+  }
+  if (mysql_select_db(conn, database) != 0) {
+    mysql_close(conn);
+    printf("select_db fail.\n");
+  }
   
   /* Generate the HTTP response */
   printf("Content-Length: %d\n", strlen(content));
