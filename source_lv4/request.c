@@ -155,8 +155,8 @@ void requestServeDynamic(rio_t *rio, int fd, char *filename, char *cgiargs, int 
   } else if (pid > 0) {
     //Parent
     if (bodyLength > 0) {
-      Rio_readlineb(rio, buf, bodyLength + 1);
-      Rio_writen(serverToClient[1], buf, bodyLength + 1);
+      Rio_readlineb(rio, buf, bodyLength);
+      Rio_writen(serverToClient[1], buf, bodyLength);
     }
   }
 }

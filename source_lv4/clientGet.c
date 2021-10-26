@@ -50,16 +50,16 @@ void clientPrint(int fd)
   Rio_readinitb(&rio, fd);
 
   /* Read and display the HTTP Header */
-  n = Rio_readlineb(&rio, buf, MAXBUF);
-  while (strcmp(buf, "\r\n") && (n > 0)) {
-    printf("Header: %s", buf);
-    n = Rio_readlineb(&rio, buf, MAXBUF);
+  // n = Rio_readlineb(&rio, buf, MAXBUF);
+  // while (strcmp(buf, "\r\n") && (n > 0)) {
+  //   printf("Header: %s", buf);
+  //   n = Rio_readlineb(&rio, buf, MAXBUF);
 
-    /* If you want to look for certain HTTP tags... */
-    if (sscanf(buf, "Content-Length: %d ", &length) == 1) {  //질문 2
-      printf("Length = %d\n", length);
-    }
-  }
+  //   /* If you want to look for certain HTTP tags... */
+  //   if (sscanf(buf, "Content-Length: %d ", &length) == 1) {  //질문 2
+  //     printf("Length = %d\n", length);
+  //   }
+  // }
 
   /* Read and display the HTTP Body */
   n = Rio_readlineb(&rio, buf, MAXBUF);
@@ -86,7 +86,7 @@ void userTask(char hostname[], int port, char webaddr[])
     if ((userRequestLength > 0) && (userRequest[userRequestLength-1] == '\n'))
       userRequest[userRequestLength-1] = '\0';
 
-    if (!strstr(userRequest, " ")) { // one word
+    if (!strstr(userRequest, " ")) { // 1 word
       if (!strcmp(userRequest, "LIST")) {
         sprintf(webaddr, "/dataGet.cgi?command=LIST");
         clientfd = Open_clientfd(hostname, port);
@@ -108,7 +108,7 @@ void userTask(char hostname[], int port, char webaddr[])
         if (temp = strtok(NULL, " ")) { // more than 3 words
           printf("Too many arguments.\n");
         } else {
-          if (!strcmp(command, "GET")) {
+          if (!strcmp(command, "GET")) { // 3 words
           sprintf(webaddr, "/dataGet.cgi?NAME=%s&N=%s", argument1, argument2);
           clientfd = Open_clientfd(hostname, port);
           clientSend(clientfd, webaddr);
