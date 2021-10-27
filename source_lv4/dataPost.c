@@ -27,7 +27,7 @@ void updateDB(char *astr)
 
   int id;
   int count;
-  float average;
+  float average, max;
   char temp[MAXLINE];
 
   conn = mysql_init(NULL);
@@ -53,7 +53,7 @@ void updateDB(char *astr)
   token = strtok(NULL, "&"); // value value
   value = atof(token);
 
-  mysql_query(conn, "create table if not exists sensorList (name CHAR(30) NOT NULL, id INT NOT NULL, count INT NOT NULL, average FLOAT NOT NULL,PRIMARY KEY(id));");
+  mysql_query(conn, "create table if not exists sensorList (name CHAR(30) NOT NULL, id INT NOT NULL, count INT NOT NULL, average FLOAT NOT NULL, max FLOAT NOT NULL, PRIMARY KEY(id));");
   mysql_query(conn, "select * from sensorList;");
   res = mysql_store_result(conn);
   while (row = mysql_fetch_row(res)) { // 0 or pointer
@@ -72,7 +72,12 @@ void updateDB(char *astr)
     id = atoi(row[1]);
     count = atoi(row[2]);
     average = (atof(row[3]) * count + value) / ++count;
-    sprintf(temp, "update sensorList set count = %d, average = %f where name = \'%s\';", count, average, name);
+    max = atof(row[4]);
+    if (max < value) {
+      max = value;
+    }
+    
+    sprintf(temp, "update sensorList set count = %d, average = %f, max = %f where name = \'%s\';", count, average, max, name);
     mysql_query(conn, temp);
 
     // 2
@@ -92,7 +97,7 @@ void updateDB(char *astr)
     id = mysql_num_rows(res) + 1;
     
     // 1
-    sprintf(temp, "insert into sensorList(name, id, count, average) values(\'%s\', %d, 1, %f);", name, id, value);
+    sprintf(temp, "insert into sensorList(name, id, count, average, max) values(\'%s\', %d, 1, %f);", name, id, value, value);
     mysql_query(conn, temp);
 
     // 2
