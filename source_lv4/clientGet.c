@@ -86,7 +86,7 @@ void userTask(char hostname[], int port, char webaddr[])
     if ((userRequestLength > 0) && (userRequest[userRequestLength-1] == '\n'))
       userRequest[userRequestLength-1] = '\0';
 
-    if (!strstr(userRequest, " ")) { // 1 word
+    if (strstr(userRequest, " ") == NULL) { // 1 word
       if (!strcmp(userRequest, "LIST")) {
         sprintf(webaddr, "/dataGet.cgi?command=LIST");
         clientfd = Open_clientfd(hostname, port);
@@ -136,10 +136,6 @@ void userTask(char hostname[], int port, char webaddr[])
     }
 
   }
-  clientfd = Open_clientfd(hostname, port);
-  clientSend(clientfd, webaddr);
-  clientPrint(clientfd);
-  Close(clientfd);
 }
 
 void getargs_cg(char hostname[], int *port, char webaddr[])
