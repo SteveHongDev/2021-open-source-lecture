@@ -10,6 +10,8 @@ int main(int argc, char *argv[])
     float value;
     char *token;
     
+    printf("HTTP/1.0 200 OK\r\n");
+    
     buf = Getenv("CONTENT_LENGTH");
     int contentLength = atoi(buf);
     Rio_readn(STDIN_FILENO, astr, contentLength);
@@ -34,7 +36,6 @@ int main(int argc, char *argv[])
 
     sprintf(msg, "WARNING: name = %s, time = %s, value = %f\r\n\r\n", name, timeToCTime, value);
     Write(STDERR_FILENO, msg, strlen(msg));
-    printf("HTTP/1.0 200 OK\r\n");
-    fflush(stdout);
     
+    fflush(stdout);
 }
