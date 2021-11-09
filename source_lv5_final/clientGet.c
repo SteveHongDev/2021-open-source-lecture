@@ -70,7 +70,7 @@ void clientPrint(int fd)
 }
 
 /* currently, there is no loop. I will add loop later */
-void userTask(char hostname[], int port, char webaddr[])
+void userTask(char hostname[], int port, char webaddr[], int pid)
 {
   int clientfd;
   int flag = 1;
@@ -97,6 +97,7 @@ void userTask(char hostname[], int port, char webaddr[])
         Close(clientfd);
       } else if (!strcmp(userRequest, "QUIT") || !strcmp(userRequest, "EXIT")) {
         flag = 0;
+        kill(pid, SIGINT);
       } else {
         printf("Undefined error.\n");
       }
@@ -167,7 +168,7 @@ int main(void)
     Execve("./alarmServer", argv, environ);
   }
 
-  userTask(hostname, port, webaddr);
+  userTask(hostname, port, webaddr, pid);
   
   return(0);
 }

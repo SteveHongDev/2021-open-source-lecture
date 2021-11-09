@@ -132,7 +132,7 @@ void textReturn(void)
       } else {
         id = atoi(row[0]);
         count = atoi(row[1]);
-        for (int i = 0; i < num; i++) {
+        for (int i = num - 1; i >= 0; i--) {
           sprintf(temp, "select time, value from sensor%d where idx = %d;", id, count - i);
           mysql_query(conn, temp);
           res = mysql_store_result(conn);
@@ -140,7 +140,7 @@ void textReturn(void)
           clock_t time = atol(row[0]);
           char *timeToCtime = ctime(&time);
           timeToCtime[strlen(timeToCtime)-1] = '\0';
-          sprintf(content, "%s%d. time = %s, value = %s\n", content, i+1, timeToCtime, row[1]);
+          sprintf(content, "%s%d. time = %s, value = %s\n", content, num - i, timeToCtime, row[1]);
         }
       }
   }
