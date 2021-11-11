@@ -81,7 +81,7 @@ int main(void)
     Read(fifofd, msg, msgSize);
     
     strcpy(sendmsg, msg);
-
+    Unlink("./fifo");
     /* strtok query */
     token = strtok(msg, "="); // name
     token = strtok(NULL, "&"); // name value

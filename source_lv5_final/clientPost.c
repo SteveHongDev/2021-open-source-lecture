@@ -153,7 +153,6 @@ void userTask(char *myname, char *hostname, int port, char *filename, float valu
         Close(clientfd);
         printf("Sending Completed.\n");
       } else if (!strcmp(userRequest, "quit")) {
-          Unlink("./fifo");
           flag = 0;
       } else {
         printf("Undefined Command.\n");
@@ -181,7 +180,6 @@ void getargs_cp(char *myname, char *hostname, int *port, char *filename, float *
 
 int main(void)
 {
-  Mkfifo("./fifo", 0777);
 
   char myname[MAXLINE], hostname[MAXLINE], filename[MAXLINE];
   int port;

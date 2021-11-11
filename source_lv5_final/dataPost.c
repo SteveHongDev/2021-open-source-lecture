@@ -135,6 +135,7 @@ int main(int argc, char *argv[])
   updateDB(astr);
 
   int fd;
+    Mkfifo("./fifo", 0777);
   fd = Open("./fifo", O_RDWR, 0);
   Write(fd, &contentLength, sizeof(int));
   Write(fd, msg, contentLength);

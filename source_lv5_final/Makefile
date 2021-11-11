@@ -30,7 +30,7 @@ dataPost.cgi: dataPost.c stems.h
 	$(CC) $(CFLAGS) -o dataPost.cgi dataPost.c stems.o $(LIBS)
 
 alarmClient: alarmClient.o stems.o
-	$(CC) $(CFLAGS) -o alarmClient alarmclient.o stems.o
+	$(CC) $(CFLAGS) -o alarmClient alarmClient.o stems.o
 
 alarmServer: alarmServer.o request.o stems.o
 	$(CC) $(CFLAGS) -o alarmServer alarmServer.o request.o stems.o $(LIBS)
