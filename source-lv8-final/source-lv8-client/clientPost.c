@@ -74,6 +74,7 @@ typedef struct ThreadArguments {
 
 sem_t mutex;
 int num = 0;
+double respondingTime[15] = {0,};
 
 void* mythread(void* arg)
 {
@@ -111,6 +112,8 @@ void* mythread(void* arg)
   
   gettimeofday(&endTime, NULL);
   printf("%d. Current time after sending: %d sec %d microsec\n", thisNum, endTime.tv_sec, endTime.tv_usec);
+  
+  respondingTime[thisNum - 1] = (endTime.tv_sec - startTime.tv_sec) + ((double)(endTime.tv_usec - startTime.tv_usec) / 1000000);
 
   Close(clientfd);
 }
@@ -193,7 +196,14 @@ void userTask(char *myname, char *hostname, int port, char *filename, float valu
         for (int j = 0; j < repeat; j++) {
           pthread_join(threads[j], NULL);
         }
+        double total = 0;
+        for (int k = 0; k < repeat; k++) {
+          total += respondingTime[k];
+        }
+        printf("Average Responding Time: %f\n", total);
+        
         printf("Sending Completed.\n");
+        num = 0;
         
       } else {
         printf("Undefined Command.\n");
@@ -226,6 +236,7 @@ void userTask(char *myname, char *hostname, int port, char *filename, float valu
         printf("Sending Completed.\n");
       } else if (!strcmp(userRequest, "quit")) {
           flag = 0;
+          sem_destroy(&mutex);
       } else {
         printf("Undefined Command.\n");
       }
